@@ -1,4 +1,4 @@
-# UI Challenge 3
+# UI Challenge 3 
 
 ## What you will be building
 
