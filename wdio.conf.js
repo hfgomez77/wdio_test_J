@@ -5,6 +5,8 @@ exports.config = {
     // ====================
     //
     port: 4723,
+    path: '/wd/hub',
+    runner: 'local',
     //
     // ==================
     // Specify Test Files
@@ -22,7 +24,7 @@ exports.config = {
     // will be called from there.
     //
     specs: [
-        './test/specs/**/*.js'
+        './scenarios/androidplayground/test/specs/**/*.js'
     ],
     // Patterns to exclude.
     exclude: [
@@ -51,20 +53,20 @@ exports.config = {
     // https://saucelabs.com/platform/platform-configurator
     //
     capabilities: [
-    
+
         // maxInstances can get overwritten per capability. So if you have an in-house Selenium
         // grid with only 5 firefox instances available you can make sure that not more than
         // 5 instances get started at a time.
         {
             platformName: "Android",
-            "appium:platformVersion": "11.0",
-            "appium:deviceName": "Hectoremulator",
-            "appium:orientation": "PORTRAIT",
-            "appium:automationName": "automatorUI",
-            "appium:app": "C:\\wdio_warner\\wdio-exercises\\scenarios\\androidplayground\\apps\\Android-NativeDemoApp-0.4.0.apk",
-            "appium:appWaitActivity": "com.wdiodemoapp.MainActivity",
-            "appium:newCommandTimeout": 240
-          }
+            platformVersion: "11.0",
+            deviceName: "Hectoremulator",
+            orientation: "PORTRAIT",
+            automationName: "automatorUI",
+            app: "C:\\wdio_warner\\wdio-exercises\\scenarios\\androidplayground\\apps\\Android-NativeDemoApp-0.4.0.apk",
+            appWaitActivity: "com.wdiodemoapp.MainActivity",
+            newCommandTimeout: 240
+        }
         // If outputDir is provided WebdriverIO can capture driver session logs
         // it is possible to configure which logTypes to include/exclude.
         // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
@@ -117,8 +119,14 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['chromedriver','appium'],
-    
+    services: ['chromedriver',['appium', {
+        args: {
+            address: '127.0.0.1',
+            port: 4727
+        }
+    }]],
+
+
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
     // see also: https://webdriver.io/docs/frameworks
@@ -139,10 +147,10 @@ exports.config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: [['allure', {outputDir: 'allure-results'}]],
+    reporters: [['allure', { outputDir: 'allure-results' }]],
 
 
-    
+
     //
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
@@ -244,7 +252,7 @@ exports.config = {
      * @param {Boolean} result.passed    true if test has passed, otherwise false
      * @param {Object}  result.retries   informations to spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
-    afterTest: async function(test, context, { error, result, duration, passed, retries }) {
+    afterTest: async function (test, context, { error, result, duration, passed, retries }) {
         if (!passed) {
             await browser.takeScreenshot();
         }

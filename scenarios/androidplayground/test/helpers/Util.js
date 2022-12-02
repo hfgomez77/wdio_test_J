@@ -1,5 +1,5 @@
 module.exports = {
-    waitForIsShown: async function(element) {
+    waitElementForIsDisplayed: async function(element) {
         return await element.waitForDisplayed();
     }
 }
